@@ -66,3 +66,22 @@ tap.test("Test connection-level handlers", function(t) {
         t.equal(socket.protocol, "test-protocol", "correct subprotocol selected");
     };
 });
+
+
+tap.test("Test message handler", function(t) {
+    let server = wsServer({ server: httpServer }, {
+        messageHandler: function(data, client) {
+            t.type(client.socket, WebSocket, "client object contains WebSocket object");
+            t.type(client.request, http.IncomingMessage, "client object contains request object");
+            t.equal(data, "test!", "correct message received on server");
+            
+            client.socket.close();
+            t.end();
+        }
+    });
+    
+    let socket = new WebSocket("ws://localhost:" + port);
+    socket.onopen = function() {
+        socket.send("test!");
+    };
+});
