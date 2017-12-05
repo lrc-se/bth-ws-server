@@ -143,6 +143,9 @@ function ping(socket) {
  */
 function createServer(serverOptions, config) {
     serverOptions.clientTracking = true;
+    config = config || {};
+    
+    // set up protocol handler, if any
     if (config.protocolHandler) {
         serverOptions.handleProtocols = config.protocolHandler;
     }
