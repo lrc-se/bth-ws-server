@@ -73,11 +73,6 @@ function handleConnection(socket, req, config) {
         request: req
     };
     
-    // call connection handler, if any
-    if (typeof config.connectionHandler == "function") {
-        config.connectionHandler(client);
-    }
-    
     // set up message handler, if any
     if (typeof config.messageHandler == "function") {
         socket.on("message", function(data) {
@@ -105,6 +100,11 @@ function handleConnection(socket, req, config) {
         socket.on("pong", function() {
             socket.pingPending = false;
         });
+    }
+    
+    // call connection handler, if any
+    if (typeof config.connectionHandler == "function") {
+        config.connectionHandler(client);
     }
 }
 
