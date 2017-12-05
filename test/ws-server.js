@@ -41,7 +41,7 @@ tap.test("Test independence of constructed objects", function(t) {
 
 
 tap.test("Test connection-level handlers", function(t) {
-    t.plan(5);
+    t.plan(11);
     
     let server = wsServer({ server: httpServer }, {
         protocolHandler: function(protocols) {
@@ -49,21 +49,60 @@ tap.test("Test connection-level handlers", function(t) {
         },
         
         connectionHandler: function(client) {
-            t.type(client.socket, WebSocket, "client object contains WebSocket object");
-            t.type(client.request, http.IncomingMessage, "client object contains request object");
+            t.type(
+                client.socket,
+                WebSocket,
+                "connect: client object contains WebSocket object"
+            );
+            t.type(
+                client.request,
+                http.IncomingMessage,
+                "connect: client object contains request object"
+            );
             
+            // trigger error event
+            client.socket.emit("error", new Error("Test error"));
+            
+            // trigger close event
             client.socket.close(4000, "Test reason");
         },
         
-        closeHandler: function(code, reason) {
-            t.equal(code, 4000, "correct closing code received");
-            t.equal(reason, "Test reason", "correct closing reason received");
+        errorHandler: function(err, client) {
+            t.type(
+                client.socket,
+                WebSocket,
+                "error: client object contains WebSocket object"
+            );
+            t.type(
+                client.request,
+                http.IncomingMessage,
+                "error: client object contains request object"
+            );
+            
+            t.type(err, Error, "error: error object received");
+            t.equal(err.message, "Test error", "error: correct error message received");
+        },
+        
+        closeHandler: function(code, reason, client) {
+            t.type(
+                client.socket,
+                WebSocket,
+                "close: client object contains WebSocket object"
+            );
+            t.type(
+                client.request,
+                http.IncomingMessage,
+                "close: client object contains request object"
+            );
+            
+            t.equal(code, 4000, "close: correct closing code received");
+            t.equal(reason, "Test reason", "close: correct closing reason received");
         }
     });
     
     let socket = new WebSocket("ws://localhost:" + port, "test-protocol");
     socket.onopen = function() {
-        t.equal(socket.protocol, "test-protocol", "correct subprotocol selected");
+        t.equal(socket.protocol, "test-protocol", "protocol: correct subprotocol selected");
     };
 });
 
