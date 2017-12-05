@@ -164,3 +164,23 @@ tap.test("Test broadcasts", function(t) {
         }
     };
 });
+
+
+tap.test("Test ping timeout", function(t) {
+    let server = wsServer({ server: httpServer }, {
+        timeout: 300,
+        
+        closeHandler: function(code) {
+            t.equal(code, 1006, "socket forcibly terminated after timeout");
+            socket.close();
+            t.end();
+        }
+    });
+    
+    let socket = new WebSocket("ws://localhost:" + port);
+    socket.onopen = function() {
+        setTimeout(function() {
+            socket.pause();
+        }, 400);
+    };
+});
