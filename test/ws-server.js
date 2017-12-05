@@ -102,3 +102,65 @@ tap.test("Test JSON message sending", function(t) {
         t.end();
     };
 });
+
+
+tap.test("Test broadcasts", function(t) {
+    t.plan(6);
+    
+    let obj1 = { foo: "bar", baz: 42 };
+    let obj2 = { bar: "baz", foo: 47 };
+    
+    let numClients = 0;
+    let server = wsServer({ server: httpServer }, {
+        connectionHandler: function(client) {
+            if (++numClients == 2) {
+                server.broadcast("foo", client.socket);
+                server.broadcast("bar");
+                server.broadcastJSON(obj1, client.socket);
+                server.broadcastJSON(obj2);
+            }
+        }
+    });
+    
+    let numMsgs1 = 0;
+    let socket1 = new WebSocket("ws://localhost:" + port);
+    socket1.onmessage = function(e) {
+        switch (numMsgs1++) {
+            case 0:
+                t.equal(
+                    e.data,
+                    "foo",
+                    "1st plain broadcast received on 1st client (2nd client excluded)"
+                );
+                break;
+            case 1:
+                t.equal(e.data, "bar", "2nd plain broadcast received on 1st client");
+                break;
+            case 2:
+                t.same(
+                    JSON.parse(e.data),
+                    obj1,
+                    "1st JSON broadcast received on 1st client (2nd client excluded)"
+                );
+                break;
+            case 3:
+                t.same(JSON.parse(e.data), obj2, "2nd JSON broadcast received on 1st client");
+                socket1.close();
+                break;
+        }
+    };
+    
+    let numMsgs2 = 0;
+    let socket2 = new WebSocket("ws://localhost:" + port);
+    socket2.onmessage = function(e) {
+        switch (numMsgs2++) {
+            case 0:
+                t.equal(e.data, "bar", "2nd plain broadcast received on 2nd client");
+                break;
+            case 1:
+                t.same(JSON.parse(e.data), obj2, "2nd JSON broadcast received on 2nd client");
+                socket2.close();
+                break;
+        }
+    };
+});
