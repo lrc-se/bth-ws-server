@@ -1,0 +1,17 @@
+{
+  "name": "ws-server",
+  "version": "1.0.0",
+  "description": "Simple WebSockets server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "WebSockets"
+  ],
+  "author": "LRC <kabc16@student.bth.se>",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^3.3.2"
+  }
+}
