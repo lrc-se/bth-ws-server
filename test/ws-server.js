@@ -85,3 +85,20 @@ tap.test("Test message handler", function(t) {
         socket.send("test!");
     };
 });
+
+
+tap.test("Test JSON message sending", function(t) {
+    let server = wsServer({ server: httpServer }, {
+        connectionHandler: function(client) {
+            server.sendJSON(client.socket, obj);
+        }
+    });
+    
+    let obj = { foo: "bar", baz: 42 };
+    let socket = new WebSocket("ws://localhost:" + port);
+    socket.onmessage = function(e) {
+        socket.close();
+        t.same(JSON.parse(e.data), obj, "correct message received on client");
+        t.end();
+    };
+});
