@@ -1,0 +1,9 @@
+{
+    "all": true,
+    "exclude": [
+        "build",
+        "test"
+    ],
+    "report-dir": "./build/coverage",
+    "temp-directory": "./build/.nyc_output"
+}
