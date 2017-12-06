@@ -1,5 +1,5 @@
 /**
- * Tests for WebSocket server.
+ * Tests for Web Sockets server.
  */
 
 "use strict";
@@ -43,7 +43,7 @@ tap.test("Test independence of constructed objects", function(t) {
 tap.test("Test connection-level handlers", function(t) {
     t.plan(11);
     
-    let server = wsServer({ server: httpServer }, {
+    wsServer({ server: httpServer }, {
         protocolHandler: function(protocols) {
             return protocols[0];
         },
@@ -108,7 +108,7 @@ tap.test("Test connection-level handlers", function(t) {
 
 
 tap.test("Test message handler", function(t) {
-    let server = wsServer({ server: httpServer }, {
+    wsServer({ server: httpServer }, {
         messageHandler: function(data, client) {
             t.type(client.socket, WebSocket, "client object contains WebSocket object");
             t.type(client.request, http.IncomingMessage, "client object contains request object");
@@ -206,7 +206,7 @@ tap.test("Test broadcasts", function(t) {
 
 
 tap.test("Test ping timeout", function(t) {
-    let server = wsServer({ server: httpServer }, {
+    wsServer({ server: httpServer }, {
         timeout: 300,
         
         closeHandler: function(code) {
