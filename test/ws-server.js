@@ -5,7 +5,7 @@
 "use strict";
 
 const tap = require("tap");
-const wsServer = require("../src/ws-server");
+const wsServer = require("../index");
 const http = require("http");
 const WebSocket = require("ws");
 
