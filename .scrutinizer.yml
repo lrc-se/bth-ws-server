@@ -1,0 +1,20 @@
+checks:
+    javascript: true
+    
+filter:
+    excluded_paths:
+        - test/*
+        - node_modules/*
+
+build:
+    dependencies:
+        after:
+            - npm install tap
+            
+    tests:
+        override:
+            -
+                command: "npm run tap-clover"
+                coverage:
+                    file: "build/coverage/clover.xml"
+                    format: "clover"
