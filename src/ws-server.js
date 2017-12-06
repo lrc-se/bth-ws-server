@@ -6,7 +6,7 @@
 
 "use strict";
 
-const ws = require("ws");
+const WebSocket = require("ws");
 
 
 /**
@@ -25,11 +25,11 @@ const wsServerProto = {
      * Broadcasts a message to all connected clients.
      *
      * @param   {string}    data        Message to send.
-     * @param   {WebSocket} [exclude]   Web socket instance to exclude from broadcast (if any).
+     * @param   {WebSocket} [exclude]   WebSocket instance to exclude from broadcast (if any).
      */
     broadcast: function broadcast(data, exclude) {
         this.server.clients.forEach(function(client) {
-            if (exclude === client || client.readyState !== ws.OPEN) {
+            if (exclude === client || client.readyState !== WebSocket.OPEN) {
                 return;
             }
             client.send(data);
@@ -40,7 +40,7 @@ const wsServerProto = {
     /**
      * Sends a JSON object to a specific client.
      *
-     * @param   {WebSocket} socket  Web socket instance to send to.
+     * @param   {WebSocket} socket  WebSocket instance to send to.
      * @param   {object}    data    Object to send.
      */
     sendJSON: function sendJSON(socket, data) {
@@ -52,7 +52,7 @@ const wsServerProto = {
      * Broadcasts a JSON object to all connected clients.
      *
      * @param   {object}    data        Object to send.
-     * @param   {WebSocket} [exclude]   Web socket instance to exclude from broadcast (if any).
+     * @param   {WebSocket} [exclude]   WebSocket instance to exclude from broadcast (if any).
      */
     broadcastJSON: function broadcastJSON(data, exclude) {
         this.broadcast(JSON.stringify(data), exclude);
@@ -63,7 +63,7 @@ const wsServerProto = {
 /**
  * Handles an incoming connection.
  *
- * @param   {WebSocket}             socket  Web socket instance.
+ * @param   {WebSocket}             socket  WebSocket instance.
  * @param   {http.IncomingMessage}  req     Request object.
  * @param   {object}                config  Server instance configuration object.
  */
@@ -133,7 +133,7 @@ function ping(socket) {
  * @param   {object}    serverOptions               Construction options for the underlying Web 
  *                                                  Sockets server. Note that the clientTracking
  *                                                  and handleProtocols properties are overwritten.
- * @param   {object}    config                      Configuration object:
+ * @param   {object}    [config]                    Configuration object:
  * @param   {number}    [config.timeout]              Ping timeout in milliseconds.
  * @param   {function}  [config.protocolHandler]      Protocol selection handler.
  * @param   {function}  [config.connectionHandler]    Connection handler.
@@ -146,12 +146,12 @@ function createServer(serverOptions, config) {
     config = config || {};
     
     // set up protocol handler, if any
-    if (config.protocolHandler) {
+    if (typeof config.protocolHandler == "function") {
         serverOptions.handleProtocols = config.protocolHandler;
     }
     
     // set up Web Sockets server
-    let server = new ws.Server(serverOptions);
+    let server = new WebSocket.Server(serverOptions);
     server.on("connection", function(socket, req) {
         handleConnection(socket, req, config);
     });
