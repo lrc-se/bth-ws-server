@@ -24,7 +24,7 @@ const wsServerProto = {
     /**
      * Broadcasts a message to all connected clients.
      *
-     * @param   {string}    data        Message to send.
+     * @param   {any}       data        Message to send.
      * @param   {WebSocket} [exclude]   WebSocket instance to exclude from broadcast (if any).
      */
     broadcast: function broadcast(data, exclude) {
@@ -38,24 +38,24 @@ const wsServerProto = {
     
     
     /**
-     * Sends a JSON object to a specific client.
-     *
-     * @param   {WebSocket} socket  WebSocket instance to send to.
-     * @param   {object}    data    Object to send.
-     */
-    sendJSON: function sendJSON(socket, data) {
-        socket.send(JSON.stringify(data));
-    },
-    
-    
-    /**
-     * Broadcasts a JSON object to all connected clients.
+     * Broadcasts an object as a JSON string to all connected clients.
      *
      * @param   {object}    data        Object to send.
      * @param   {WebSocket} [exclude]   WebSocket instance to exclude from broadcast (if any).
      */
     broadcastJSON: function broadcastJSON(data, exclude) {
         this.broadcast(JSON.stringify(data), exclude);
+    },
+    
+    
+    /**
+     * Sends an object as a JSON string to a specific client.
+     *
+     * @param   {WebSocket} socket  WebSocket instance to send to.
+     * @param   {object}    data    Object to send.
+     */
+    sendJSON: function sendJSON(socket, data) {
+        socket.send(JSON.stringify(data));
     }
 };
 
@@ -68,6 +68,7 @@ const wsServerProto = {
  * @param   {object}                config  Server instance configuration object.
  */
 function handleConnection(socket, req, config) {
+    // set up client object
     let client = {
         socket: socket,
         request: req
@@ -112,7 +113,7 @@ function handleConnection(socket, req, config) {
 /**
  * Pings a connected client, disconnecting it in case of no response from last ping.
  *
- * @param   {WebSocket}     socket  Web socket instance.
+ * @param   {WebSocket}     socket  WebSocket instance.
  */
 function ping(socket) {
     // forcibly close connection if no reply since last ping
@@ -142,7 +143,6 @@ function ping(socket) {
  * @param   {function}  [config.closeHandler]         Disconnection handler.
  */
 function createServer(serverOptions, config) {
-    serverOptions.clientTracking = true;
     config = config || {};
     
     // set up protocol handler, if any
@@ -151,6 +151,7 @@ function createServer(serverOptions, config) {
     }
     
     // set up Web Sockets server
+    serverOptions.clientTracking = true;
     let server = new WebSocket.Server(serverOptions);
     server.on("connection", function(socket, req) {
         handleConnection(socket, req, config);
@@ -163,7 +164,7 @@ function createServer(serverOptions, config) {
         }, config.timeout);
     }
     
-    // create and return instance
+    // create and return server instance
     let wsServer = Object.create(wsServerProto);
     wsServer.server = server;
     return wsServer;
