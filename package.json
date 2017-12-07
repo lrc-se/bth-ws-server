@@ -1,8 +1,12 @@
 {
   "name": "ws-server",
   "version": "1.0.0",
-  "description": "Simple WebSockets server",
+  "description": "Simple Web Sockets server",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "src"
+  ],
   "scripts": {
     "test": "npm-run-all -c lint tap",
     "tap": "tap -c --reporter=spec --coverage --coverage-report=html --no-browser test/*.js",
@@ -10,12 +14,16 @@
     "lint": "eslint ."
   },
   "keywords": [
+    "WebSocket",
     "WebSockets"
   ],
+  "homepage": "https://github.com/lrc-se/bth-ws-server",
+  "bugs": "https://github.com/lrc-se/bth-ws-server/issues",
+  "repository": "lrc-se/bth-ws-server",
   "author": "LRC <kabc16@student.bth.se>",
   "license": "MIT",
   "dependencies": {
-    "ws": "^3.3.2"
+    "ws": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^4.12.1",
