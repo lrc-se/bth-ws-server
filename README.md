@@ -6,13 +6,13 @@ ws-server
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/?branch=master)
 
-A simple Web Sockets server module for Node.js, for use in server applications.
+A simple Web Sockets server module for Node.js based on [ws](https://www.npmjs.com/package/ws), for use in server applications.
 
 
 Dependencies
 ------------
 
-- [ws](https://www.npmjs.com/package/ws)
+- ws
 - tap *(development)*
 - eslint *(development)*
 - npm-run-all *(development)*
@@ -156,7 +156,7 @@ httpServer.listen(process.env.PORT || 80);
 Tests
 -----
 
-A test suite is included using [Node Tap](http://www.node-tap.org/) together with [ESLint](https://eslint.org/) for linting:
+A test suite using [Node Tap](http://www.node-tap.org/) is included in the repo together with [ESLint](https://eslint.org/) for linting:
 
 ```
 $ npm run lint      # run linter
