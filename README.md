@@ -1,6 +1,7 @@
 ws-server
 =========
 
+[![npm](https://img.shields.io/npm/v/ws-server.svg)](http://www.npmjs.com/package/ws-server)
 [![Travis CI Build Status](https://travis-ci.org/lrc-se/bth-ws-server.svg?branch=master)](https://travis-ci.org/lrc-se/bth-ws-server)
 [![Scrutinizer Build Status](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/badges/build.png?b=master)](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lrc-se/bth-ws-server/?branch=master)
@@ -158,7 +159,7 @@ Tests
 
 A test suite using [Node Tap](http://www.node-tap.org/) is included in the repo together with [ESLint](https://eslint.org/) for linting:
 
-```
+```bash
 $ npm run lint      # run linter
 $ npm run tap       # run test suite
 $ npm test          # both of the above, in sequence
